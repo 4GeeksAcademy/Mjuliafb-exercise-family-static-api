@@ -44,6 +44,11 @@ def handle_add_member():
     member = request.get_json()
     if not member:
         return jsonify({"msg": "No member data provided"}), 400
+    required_fields = ["id","first_name", "last_name", "age", "lucky_numbers"]
+    if not all(field in member for field in required_fields):
+        return jsonify({"msg": "Missing required fields"}), 400
+    if len(member.keys()) != len(required_fields):
+        return jsonify({"msg": "Extra fields provided"}), 400
     members = jackson_family.add_member(member)
     if members:
         return jsonify({"msg": "Member added successfully"}), 200
